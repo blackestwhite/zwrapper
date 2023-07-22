@@ -7,7 +7,6 @@ function prompt_with_default() {
 }
 
 # Prompt for environment variables
-JWT_SECRET=$(prompt_with_default "JWT_SECRET" "32 char long secret")
 MERCHANT_ID=$(prompt_with_default "MERCHANT_ID" "merchant id by zarinpal")
 ADMIN_USERNAME=$(prompt_with_default "ADMIN_USERNAME" "admin_username")
 ADMIN_PASSWORD=$(prompt_with_default "ADMIN_PASSWORD" "admin_password")
@@ -15,7 +14,6 @@ BASE_URL=$(prompt_with_default "BASE_URL" "https://example.com/")
 
 # Save environment variables to .env
 cat > .env <<EOF
-JWT_SECRET="$JWT_SECRET"
 MERCHANT_ID="$MERCHANT_ID"
 ADMIN_USERNAME="$ADMIN_USERNAME"
 ADMIN_PASSWORD="$ADMIN_PASSWORD"
