@@ -1,3 +1,5 @@
+github.com/blackestwhite/go-zarinpal v0.0.0-20220911121845-76588a393d52 h1:j0nmeD9/stLJQ2PJ5yKup/azszeeeHWTnLfEL30PvXA=
+github.com/blackestwhite/go-zarinpal v0.0.0-20220911121845-76588a393d52/go.mod h1:AKSerU8c7eupbT3jFu29164Qc5pZy006GwKlGdnzVgE=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=
