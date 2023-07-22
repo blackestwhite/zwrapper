@@ -3,7 +3,7 @@ services:
   mongodb:
     image: mongo
     volumes:
-      - /vol/oremote/data/zwrapper:/data/db
+      - /vol/zwrapper/data/db:/data/db
     restart: always
   app:
     build: .
