@@ -18,6 +18,7 @@ type AdminHandler struct{}
 
 func SetupAdmin(r *gin.RouterGroup) *AdminHandler {
 	adminHandler := &AdminHandler{}
+	adminHandler.initRoutes(r)
 	return adminHandler
 }
 
