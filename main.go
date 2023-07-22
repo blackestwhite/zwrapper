@@ -6,6 +6,7 @@ import (
 	"github.com/blackestwhite/zwrapper/config"
 	"github.com/blackestwhite/zwrapper/db"
 	"github.com/blackestwhite/zwrapper/gateway"
+	"github.com/blackestwhite/zwrapper/router"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,8 @@ func main() {
 	gateway.Initiate()
 
 	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
-	router.LoadHTMLGlob("./templates/*")
-	log.Panic(router.Run(":8080"))
+	engine := gin.New()
+	engine.LoadHTMLGlob("./templates/*")
+	router.Setup(engine)
+	log.Panic(engine.Run(":8080"))
 }
