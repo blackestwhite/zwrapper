@@ -32,7 +32,6 @@ on success returns:
     "ok": true,
     "result": {
         "message": "token generated successfully",
-        "id": "insertion ID",
         "consumer": "consumer name",
         "token": "uuid access token"
     }
