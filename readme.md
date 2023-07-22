@@ -1,6 +1,6 @@
 # Zwrapper: Zarinpal API wrapper
 to run the app, make sure you have docker, docker compose and curl installed. then use the following commands:
-```console
+```terminal
 git clone git@github.com:blackestwhite/zwrapper.git
 cd zwrapper
 chmod +x ./setup.sh
