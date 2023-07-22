@@ -12,6 +12,7 @@ import (
 	"github.com/blackestwhite/zwrapper/db"
 	"github.com/blackestwhite/zwrapper/entity"
 	"github.com/blackestwhite/zwrapper/gateway"
+	"github.com/blackestwhite/zwrapper/router/middleware"
 	"github.com/blackestwhite/zwrapper/utils"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -32,8 +33,8 @@ func (p *PaymentHandler) initRoutes(r *gin.RouterGroup) {
 	payment.GET("/landing", landing)
 	payment.GET("/pay/:id", payPayment)
 
-	payment.POST("/new", newPayment)
-	payment.POST("/verify/:id", verifyPayment)
+	payment.POST("/new", middleware.Permitted(), newPayment)
+	payment.POST("/verify/:id", middleware.Permitted(), verifyPayment)
 }
 
 func landing(c *gin.Context) {
