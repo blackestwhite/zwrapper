@@ -10,4 +10,5 @@ func Setup(router *gin.Engine) {
 	v1 := api.Group("/v1")
 
 	handler.SetupAdmin(v1)
+	handler.SetupPayment(v1)
 }
