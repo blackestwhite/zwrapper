@@ -72,7 +72,7 @@ on success returns:
 
 `:id` is the id fetched in payment creation step
 
-### verify payments(whether a payment is paid or not)
+#### verify payments(whether a payment is paid or not)
 
 `POST /api/v1/payment/verify/:id`
 
