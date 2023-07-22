@@ -16,13 +16,16 @@ docker compose up -d --build
 ## Endpoints
 ### Admin
 #### creating new consumers
+
 `POST /api/v1/admin/newConsumer?username=admin_username&password=admin_password`
+
 body:
 ```json
 {
     "consumer": "consumer name"
 }
 ```
+
 on success returns:
 ```json
 {
@@ -37,9 +40,13 @@ on success returns:
 ```
 
 ### Payments
+
 #### creating new payments
+
 `POST /api/v1/payment/new`
+
 access token fetched in consumer creation should be included as a header which name is `x-zwrapper-access-token`
+
 body:
 ```json
 {
@@ -49,6 +56,7 @@ body:
     "description": "payment description"
 }
 ```
+
 on success returns:
 ```json
 {
@@ -59,13 +67,19 @@ on success returns:
 }
 ```
 #### going to payment page(for end-user)
+
 `GET /api/v1/payment/pay/:id`
+
 `:id` is the id fetched in payment creation step
 
 ### verify payments(wheter a payment is paid or not)
+
 `POST /api/v1/payment/verify/:id`
+
 `:id` is the id fetched in payment creation step
+
 access token fetched in consumer creation should be included as a header which name is `x-zwrapper-access-token`
+
 if paid retuns:
 ```json
 {
@@ -76,6 +90,7 @@ if paid retuns:
     }
 }
 ```
+
 if not paid returns:
 ```json
 {
@@ -92,4 +107,5 @@ if not paid returns:
 
 
 ## TODO
+
 - [ ] check if vpn/proxy is being used
