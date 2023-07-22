@@ -1,20 +1,19 @@
 package handler
 
 import (
-	"context"
 	"net/http"
-	"time"
 
 	"github.com/blackestwhite/presenter"
 	"github.com/blackestwhite/zwrapper/config"
-	"github.com/blackestwhite/zwrapper/db"
 	"github.com/blackestwhite/zwrapper/entity"
+	"github.com/blackestwhite/zwrapper/service"
 	"github.com/blackestwhite/zwrapper/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/gofrs/uuid"
 )
 
-type AdminHandler struct{}
+type AdminHandler struct {
+	accessTokenService service.AccessTokenService
+}
 
 func SetupAdmin(r *gin.RouterGroup) *AdminHandler {
 	adminHandler := &AdminHandler{}
@@ -58,21 +57,7 @@ func (a *AdminHandler) newConsumer(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	u, err := uuid.NewV4()
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
-			Ok:               false,
-			ErrorCode:        http.StatusInternalServerError,
-			ErrorDescription: err.Error(),
-		})
-		return
-	}
-	accessToken.Token = u.String()
-
-	res, err := db.Client.Database("zwrapper").Collection("tokens").InsertOne(ctx, accessToken)
+	accessToken, err = a.accessTokenService.Create(accessToken)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
@@ -86,7 +71,6 @@ func (a *AdminHandler) newConsumer(c *gin.Context) {
 		Ok: true,
 		Result: gin.H{
 			"message":  "token generated successfully",
-			"id":       res.InsertedID,
 			"consumer": accessToken.Consumer,
 			"token":    accessToken.Token,
 		},
