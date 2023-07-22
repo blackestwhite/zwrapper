@@ -72,7 +72,7 @@ func (a *AdminHandler) newConsumer(c *gin.Context) {
 	}
 	accessToken.Token = u.String()
 
-	res, err := db.Client.Database("api").Collection("tokens").InsertOne(ctx, accessToken)
+	res, err := db.Client.Database("zwrapper").Collection("tokens").InsertOne(ctx, accessToken)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
