@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/blackestwhite/zwrapper/utils"
 	"github.com/joho/godotenv"
 )
 
@@ -23,6 +24,6 @@ func Load() {
 	JWT_SECRET = os.Getenv("JWT_SECRET")
 	MERCHANT_ID = os.Getenv("MERCHANT_ID")
 	ADMIN_USERNAME = os.Getenv("ADMIN_USERNAME")
-	ADMIN_PASSWORD = os.Getenv("ADMIN_PASSWORD")
+	ADMIN_PASSWORD = utils.Hash(os.Getenv("ADMIN_PASSWORD"))
 	BASE_URL = os.Getenv("BASE_URL")
 }
