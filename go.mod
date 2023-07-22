@@ -4,7 +4,9 @@ go 1.20
 
 require (
 	github.com/blackestwhite/go-zarinpal v0.0.0-20220911121845-76588a393d52
+	github.com/blackestwhite/presenter v0.0.0-20220816202159-9afd91f05162
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.12.0
 )
