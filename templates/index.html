@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتیجه پرداخت</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        *, *::after, *::before {
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'vazirmatn', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #wrapper {
+            height: fit-content;
+            width: 33%;
+            border: 1px solid rgb(176, 176, 176);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        #wrapper h2, #wrapper p {
+            margin-bottom: 2rem;
+            text-align: center;
+            direction: rtl;
+        }
+        #wrapper a {
+            margin: 2rem auto;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 24px;
+            color: black;
+            width: fit-content;
+        }
+        .success {
+            background-color: rgb(47, 255, 130);
+        }
+        .fail {
+            background-color: rgb(255, 97, 97);
+        }
+        kbd {
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- <h1>
+        {{ .var }}
+    </h1> -->
+    <div id="wrapper">
+        {{if .succeeded}}
+            <h2>
+                پرداخت با موفقیت انجام شد
+            </h2>
+            
+            <a href="{{.next}}" class="success">
+                ادامه
+            </a>
+        {{end}}
+
+        {{if .failed}}
+            <h2>
+                پرداخت با موفقیت انجام نشد!
+            </h2>
+            <p>
+                در صورت کسر وجه مبلغ تا ۷۲ ساعت آینده به حساب بانکی شما باز خواهد گشت.
+            </p>
+            
+            <a href="{{.next}}" class="fail">
+                ادامه
+            </a>
+        {{end}}
+
+        <kbd>pay/v1</kbd>
+    </div>
+</body>
+</html>
