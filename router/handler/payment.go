@@ -156,8 +156,6 @@ func payPayment(c *gin.Context) {
 
 	gateway.Instance.RefreshAuthority(p.Authority, 1800)
 
-	// TODO: check if vpn/proxy is being used
-
 	c.Redirect(http.StatusPermanentRedirect, gateway.Instance.PaymentEndpoint+p.Authority)
 }
 
