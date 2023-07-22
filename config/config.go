@@ -8,8 +8,10 @@ import (
 )
 
 var (
-	JWT_SECRET  string
-	MERCHANT_ID string
+	JWT_SECRET     string
+	MERCHANT_ID    string
+	ADMIN_USERNAME string
+	ADMIN_PASSWORD string
 )
 
 func Load() {
@@ -19,4 +21,6 @@ func Load() {
 	}
 	JWT_SECRET = os.Getenv("JWT_SECRET")
 	MERCHANT_ID = os.Getenv("MERCHANT_ID")
+	ADMIN_USERNAME = os.Getenv("ADMIN_USERNAME")
+	ADMIN_PASSWORD = os.Getenv("ADMIN_PASSWORD")
 }
