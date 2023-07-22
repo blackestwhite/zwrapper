@@ -1,6 +1,10 @@
 # Zwrapper: Zarinpal API wrapper
-to run the app, fill the entries in `.env.dev` and rename it to `.env`, also check ports in `docker-compose.yml` then use the following command to run the app:
+to run the app, make sure you have docker, docker compose and curl installed. then use the following commands:
 ```console
+git clone git@github.com:blackestwhite/zwrapper.git
+cd zwrapper
+chmod +x ./setup.sh
+./setup.sh
 docker compose up -d --build
 ```
 
