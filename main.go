@@ -15,6 +15,7 @@ func main() {
 	db.Connect()
 	gateway.Initiate()
 
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 	router.LoadHTMLGlob("./templates/*")
 	log.Panic(router.Run(":8080"))
