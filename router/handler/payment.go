@@ -13,13 +13,15 @@ import (
 	"github.com/blackestwhite/zwrapper/entity"
 	"github.com/blackestwhite/zwrapper/gateway"
 	"github.com/blackestwhite/zwrapper/router/middleware"
+	"github.com/blackestwhite/zwrapper/service"
 	"github.com/blackestwhite/zwrapper/utils"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type PaymentHandler struct{}
+type PaymentHandler struct {
+	paymentService service.PaymentService
+}
 
 func SetupPayment(r *gin.RouterGroup) *PaymentHandler {
 	paymentHandler := &PaymentHandler{}
@@ -31,10 +33,10 @@ func (p *PaymentHandler) initRoutes(r *gin.RouterGroup) {
 	payment := r.Group("/payment")
 
 	payment.GET("/landing", landing)
-	payment.GET("/pay/:id", payPayment)
+	payment.GET("/pay/:id", p.payPayment)
 
-	payment.POST("/new", middleware.Permitted(), newPayment)
-	payment.POST("/verify/:id", middleware.Permitted(), verifyPayment)
+	payment.POST("/new", middleware.Permitted(), p.newPayment)
+	payment.POST("/verify/:id", middleware.Permitted(), p.verifyPayment)
 }
 
 func landing(c *gin.Context) {
@@ -82,8 +84,8 @@ func landing(c *gin.Context) {
 	})
 }
 
-func newPayment(c *gin.Context) {
-	var p entity.Payment
+func (p *PaymentHandler) newPayment(c *gin.Context) {
+	var payment entity.Payment
 	err := json.NewDecoder(c.Request.Body).Decode(&p)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
@@ -94,7 +96,7 @@ func newPayment(c *gin.Context) {
 		return
 	}
 
-	_, auth, _, err := gateway.Instance.NewPaymentRequest(p.Amount, config.BASE_URL+"/api/v1/payment/landing", p.Description, "", "")
+	_, auth, _, err := gateway.Instance.NewPaymentRequest(payment.Amount, config.BASE_URL+"/api/v1/payment/landing", payment.Description, "", "")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
@@ -104,15 +106,10 @@ func newPayment(c *gin.Context) {
 		return
 	}
 
-	p.ID = primitive.NewObjectID()
-	p.Authority = auth
-	p.Key = c.GetHeader("x-zwrapper-access-token")
-	p.Timestamp = time.Now().Unix()
+	payment.Authority = auth
+	payment.Key = c.GetHeader("x-zwrapper-access-token")
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	_, err = db.Client.Database("zwrapper").Collection("payments").InsertOne(ctx, p)
+	payment, err = p.paymentService.Create(payment)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
@@ -125,13 +122,13 @@ func newPayment(c *gin.Context) {
 	c.JSON(http.StatusOK, presenter.Std{
 		Ok: true,
 		Result: gin.H{
-			"id": p.ID.Hex(),
+			"id": payment.ID.Hex(),
 		},
 	})
 }
 
-func payPayment(c *gin.Context) {
-	ObjectID, err := primitive.ObjectIDFromHex(c.Param("id"))
+func (p *PaymentHandler) payPayment(c *gin.Context) {
+	payment, err := p.paymentService.Get(c.Param("id"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
@@ -141,26 +138,13 @@ func payPayment(c *gin.Context) {
 		return
 	}
 
-	var p entity.Payment
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	err = db.Client.Database("zwrapper").Collection("payments").FindOne(ctx, bson.M{"_id": ObjectID}).Decode(&p)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
-			Ok:               false,
-			ErrorCode:        http.StatusInternalServerError,
-			ErrorDescription: err.Error(),
-		})
-		return
-	}
+	gateway.Instance.RefreshAuthority(payment.Authority, 1800)
 
-	gateway.Instance.RefreshAuthority(p.Authority, 1800)
-
-	c.Redirect(http.StatusPermanentRedirect, gateway.Instance.PaymentEndpoint+p.Authority)
+	c.Redirect(http.StatusPermanentRedirect, gateway.Instance.PaymentEndpoint+payment.Authority)
 }
 
-func verifyPayment(c *gin.Context) {
-	ObjectID, err := primitive.ObjectIDFromHex(c.Param("id"))
+func (p *PaymentHandler) verifyPayment(c *gin.Context) {
+	payment, err := p.paymentService.Get(c.Param("id"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
 			Ok:               false,
@@ -170,20 +154,7 @@ func verifyPayment(c *gin.Context) {
 		return
 	}
 
-	var p entity.Payment
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	err = db.Client.Database("zwrapper").Collection("payments").FindOne(ctx, bson.M{"_id": ObjectID}).Decode(&p)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
-			Ok:               false,
-			ErrorCode:        http.StatusInternalServerError,
-			ErrorDescription: err.Error(),
-		})
-		return
-	}
-
-	verified, ref, status, err := gateway.Instance.PaymentVerification(p.Amount, p.Authority)
+	verified, ref, status, err := gateway.Instance.PaymentVerification(payment.Amount, payment.Authority)
 	if err != nil {
 		c.JSON(200, presenter.Std{
 			Ok: true,
