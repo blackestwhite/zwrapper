@@ -20,6 +20,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	config.Load()
 	db.Connect()
+	defer db.Disconnect()
 	gateway.Initiate()
 
 	gin.SetMode(gin.ReleaseMode)
@@ -58,7 +59,4 @@ func main() {
 	}
 
 	log.Println("Server shut down.")
-
-	// Disconnect the database
-	db.Disconnect()
 }
