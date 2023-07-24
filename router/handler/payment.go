@@ -12,6 +12,7 @@ import (
 	"github.com/blackestwhite/zwrapper/db"
 	"github.com/blackestwhite/zwrapper/entity"
 	"github.com/blackestwhite/zwrapper/gateway"
+	"github.com/blackestwhite/zwrapper/repository"
 	"github.com/blackestwhite/zwrapper/router/middleware"
 	"github.com/blackestwhite/zwrapper/service"
 	"github.com/blackestwhite/zwrapper/utils"
@@ -24,7 +25,11 @@ type PaymentHandler struct {
 }
 
 func SetupPayment(r *gin.RouterGroup) *PaymentHandler {
-	paymentHandler := &PaymentHandler{}
+	paymentRepo := repository.NewMongoPaymentRepository(db.Client, "zwrapper", "payemnts")
+	paymentService := service.NewPaymentService(paymentRepo)
+	paymentHandler := &PaymentHandler{
+		paymentService: *paymentService,
+	}
 	paymentHandler.initRoutes(r)
 	return paymentHandler
 }

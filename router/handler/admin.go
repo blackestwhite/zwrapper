@@ -5,7 +5,9 @@ import (
 
 	"github.com/blackestwhite/presenter"
 	"github.com/blackestwhite/zwrapper/config"
+	"github.com/blackestwhite/zwrapper/db"
 	"github.com/blackestwhite/zwrapper/entity"
+	"github.com/blackestwhite/zwrapper/repository"
 	"github.com/blackestwhite/zwrapper/service"
 	"github.com/blackestwhite/zwrapper/utils"
 	"github.com/gin-gonic/gin"
@@ -16,7 +18,11 @@ type AdminHandler struct {
 }
 
 func SetupAdmin(r *gin.RouterGroup) *AdminHandler {
-	adminHandler := &AdminHandler{}
+	accessTokenRepo := repository.NewMongoAccessTokenRepository(db.Client, "zwrapper", "tokens")
+	accessTokenService := service.NewAccessTokenService(accessTokenRepo)
+	adminHandler := &AdminHandler{
+		accessTokenService: *accessTokenService,
+	}
 	adminHandler.initRoutes(r)
 	return adminHandler
 }
