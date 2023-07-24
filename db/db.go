@@ -37,3 +37,13 @@ func Connect() {
 
 	log.Println("Database Connected.")
 }
+
+func Disconnect() {
+	if Client != nil {
+		if err := Client.Disconnect(context.Background()); err != nil {
+			log.Println("Error closing database connection:", err)
+		} else {
+			log.Println("Database connection closed.")
+		}
+	}
+}
