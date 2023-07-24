@@ -58,4 +58,7 @@ func main() {
 	}
 
 	log.Println("Server shut down.")
+
+	// Disconnect the database
+	db.Disconnect()
 }
