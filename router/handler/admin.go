@@ -63,6 +63,15 @@ func (a *AdminHandler) newConsumer(c *gin.Context) {
 		return
 	}
 
+	if len(accessToken.Consumer) < 3 {
+		c.AbortWithStatusJSON(http.StatusBadRequest, presenter.Std{
+			Ok:               false,
+			ErrorCode:        http.StatusBadRequest,
+			ErrorDescription: "minimum length for consumer name is 3",
+		})
+		return
+	}
+
 	accessToken, err = a.accessTokenService.Create(accessToken)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, presenter.Std{
