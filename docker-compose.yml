@@ -5,6 +5,7 @@ services:
     volumes:
       - /vol/zwrapper/data/db:/data/db
     restart: always
+    command: --quiet
   app:
     build: .
     ports:
