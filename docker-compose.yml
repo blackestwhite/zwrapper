@@ -5,7 +5,10 @@ services:
     volumes:
       - /vol/zwrapper/data/db:/data/db
     restart: always
-    command: --quiet
+    log_driver: "json-file"
+    log_opt:
+      max-size: "100k"
+      max-file: "20"
   app:
     build: .
     ports:
@@ -15,3 +18,7 @@ services:
       - mongodb
     links:
       - mongodb
+    log_driver: "json-file"
+    log_opt:
+      max-size: "100k"
+      max-file: "20"
