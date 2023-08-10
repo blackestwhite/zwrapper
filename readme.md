@@ -7,6 +7,7 @@ chmod +x ./setup.sh
 ./setup.sh
 docker compose up -d --build
 ```
+`setup.sh` writes your inputs into `.env`.
 
 ## Features
 - automatically refresh authority before end-user interaction
