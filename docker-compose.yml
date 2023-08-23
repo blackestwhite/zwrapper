@@ -1,14 +1,15 @@
-version: '3'
+version: '3.8'
 services: 
   mongodb:
     image: mongo
     volumes:
       - /vol/zwrapper/data/db:/data/db
     restart: always
-    log_driver: "json-file"
-    log_opt:
-      max-size: "100k"
-      max-file: "20"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "10"
   app:
     build: .
     ports:
@@ -18,7 +19,8 @@ services:
       - mongodb
     links:
       - mongodb
-    log_driver: "json-file"
-    log_opt:
-      max-size: "100k"
-      max-file: "20"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "10"
