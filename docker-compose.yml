@@ -19,6 +19,11 @@ services:
       - mongodb
     links:
       - mongodb
+    environment:
+      - MERCHANT_ID=${MERCHANT_ID}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - BASE_URL=${BASE_URL}
     logging:
       driver: "json-file"
       options:
